@@ -216,8 +216,9 @@ class Chart {
 				point,
 			);
 			graphics.drawPoint(ctx, pixelLoc, "rgba(255,255,255,0.7)", 100000000);
-			for(const sample of this.nearestSamples){
-				const point=math.remapPoint(
+			ctx.strokeStyle = "gray";
+			for (const sample of this.nearestSamples) {
+				const point = math.remapPoint(
 					this.dataBounds,
 					this.pixelBounds,
 					sample.point,
@@ -226,7 +227,7 @@ class Chart {
 				ctx.moveTo(...pixelLoc);
 				ctx.lineTo(...point);
 				ctx.stroke();
-			};
+			}
 			graphics.drawImage(ctx, this.styles[label].image, pixelLoc);
 		}
 
