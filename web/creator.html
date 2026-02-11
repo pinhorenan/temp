@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, maximum-scale=0.9, user-scalable=no">
+  <title>Data Creator</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div id="content">
+    <h1>Data Creator</h1>
+    <div>
+      <input id="user" type="text" placeholder="Digite seu nome"/>
+      <span id="instructions"></span>
+      <button id="advanceBtn" onclick="start();">Começar</button>
+    </div>
+    <br>
+    <div id="sketchPadContainer" style="visibility:hidden;"></div>
+  </div>
+  <script src="js/draw.js"></script>
+  <script src="js/sketchPad.js"></script>
+
+  <script>
+    let index=0;
+    const labels=["carro", "peixe"];
+    const data={
+      user:null,
+      session:new Date().getTime(),
+      drawings:{}
+    };
+
+    const sketchPad= 
+      new SketchPad(sketchPadContainer);
+
+    function start(){
+      if(user.value==""){
+        alert("Por favor, digite seu nome.");
+        return;
+      }
+      data.user=user.value;
+      user.style.display="none";
+
+      sketchPadContainer.style.visibility="visible";
+      const label=labels[index];
+      instructions.innerHTML="Por favor, desenhe um(a) "+label+".";
+      advanceBtn.innerText="Próximo";
+      advanceBtn.onclick=next;
+    }
+
+    function next(){
+      if(sketchPad.paths.length==0){
+        alert("Por favor, desenhe algo antes de continuar.");
+        return;
+      };
+
+      const label=labels[index];
+      data.drawings[label]=sketchPad.paths;
+      sketchPad.reset();
+      index++;
+      if(index<labels.length){
+        const nextLabel=labels[index];
+        instructions.innerHTML="Por favor, desenhe um(a) "+nextLabel+".";
+      }else{
+        sketchPadContainer.style.visibility="hidden";
+        instructions.innerHTML="Obrigado por suas contribuições!";
+        advanceBtn.innerHTML="Salvar Dados";
+        advanceBtn.onclick=saveData;
+      }
+    }
+
+    function saveData(){
+      advanceBtn.style.display="none";
+      instructions.innerHTML="Salve o arquivo JSON junto com o resto dos dados de treinamento. Ele será usado para treinar o modelo de IA.";
+      
+      const element=document.createElement("a");
+      element.setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(JSON.stringify(data))
+    );
+    
+    const fileName=data.session+".json";
+    element.setAttribute("download", fileName);
+
+    element.style.display="none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    }
+  </script>
+</body>
+</html>
