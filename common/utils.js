@@ -1,4 +1,6 @@
-export const utils = {};
+const utils = {};
+
+utils.flaggedUsers = [1663882102141, 1663900040545, 1664485938220];
 
 utils.styles = {
 	car: { color: "gray", text: "🚗" },
@@ -11,18 +13,19 @@ utils.styles = {
 	clock: { color: "lightgray", text: "🕒" },
 };
 
-export const flaggedUsers = [];
-
-export const printProgress = (count, max) => {
-	process.stdout.clearLine();
-	process.stdout.cursorTo(0);
-	const percent = formatPercent(count / max);
-	process.stdout.write(count + "/" + max + "(" + percent + ")");
+utils.formatPercent = (n) => {
+	return (n * 100).toFixed(2) + "%";
 };
 
-export const groupBy = (objArray, key) => {
-	const groups = {};
+utils.printProgress = (count, max) => {
+	process.stdout.clearLine();
+	process.stdout.cursorTo(0);
+	const percent = utils.formatPercent(count / max);
+	process.stdout.write(count + "/" + max + " (" + percent + ")");
+};
 
+utils.groupBy = (objArray, key) => {
+	const groups = {};
 	for (let obj of objArray) {
 		const val = obj[key];
 		if (groups[val] == null) {
@@ -33,6 +36,6 @@ export const groupBy = (objArray, key) => {
 	return groups;
 };
 
-const formatPercent = (n) => {
-	return (n * 100).toFixed(2) + "%";
-};
+if (typeof module !== "undefined") {
+	module.exports = utils;
+}

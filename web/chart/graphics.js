@@ -1,4 +1,4 @@
-export const graphics = {};
+const graphics = {};
 
 graphics.drawPoint = (ctx, loc, color = "black", size = 8) => {
 	ctx.beginPath();

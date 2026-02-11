@@ -1,36 +1,39 @@
-import {
-	JSON_DIR,
-	SAMPLES,
-	FEATURES,
-	FEATURES_JS,
-} from "../common/constants.js";
-import { getPathCount, getPointCount } from "../common/features.js";
-import { readFileSync, writeFileSync } from "fs";
+const constants = require("../common/constants.js");
+const features = require("../common/features.js");
 
-const samples = JSON.parse(readFileSync(SAMPLES));
+const fs = require("fs");
 
-console.log("Extracting features...");
+console.log("EXTRACTING FEATURES ...");
+
+const samples = JSON.parse(fs.readFileSync(constants.SAMPLES));
 
 for (const sample of samples) {
-	const paths = JSON.parse(readFileSync(JSON_DIR + "/" + sample.id + ".json"));
-	sample.point = [getPathCount(paths), getPointCount(paths)];
+	const paths = JSON.parse(
+		fs.readFileSync(constants.JSON_DIR + "/" + sample.id + ".json"),
+	);
+	sample.point = [features.getPathCount(paths), features.getPointCount(paths)];
 }
 
 const featureNames = ["Path Count", "Point Count"];
 
-writeFileSync(
-	FEATURES,
+fs.writeFileSync(
+	constants.FEATURES,
 	JSON.stringify({
 		featureNames,
 		samples: samples.map((s) => {
-			return { point: s.point, label: s.label };
+			return {
+				point: s.point,
+				label: s.label,
+			};
 		}),
 	}),
 );
 
-writeFileSync(
-	FEATURES_JS,
-	"export const features = " + JSON.stringify({ featureNames, samples }) + ";",
+fs.writeFileSync(
+	constants.FEATURES_JS,
+	`const features=
+   ${JSON.stringify({ featureNames, samples })}
+   ;`,
 );
 
-console.log("Features extracted and saved to " + FEATURES);
+console.log("DONE!");

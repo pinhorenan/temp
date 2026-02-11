@@ -1,7 +1,4 @@
-import { graphics } from "./graphics.js";
-import { math } from "./math.js";
-
-export class Chart {
+class Chart {
 	constructor(container, samples, options, onClick = null) {
 		this.samples = samples;
 

@@ -1,18 +1,24 @@
-export const path = (ctx, pathArray, color = "black") => {
+const draw = {};
+
+draw.path = (ctx, path, color = "black") => {
 	ctx.strokeStyle = color;
 	ctx.lineWidth = 3;
 	ctx.beginPath();
-	ctx.moveTo(...pathArray[0]);
-	for (let i = 1; i < pathArray.length; i++) {
-		ctx.lineTo(...pathArray[i]);
+	ctx.moveTo(...path[0]);
+	for (let i = 1; i < path.length; i++) {
+		ctx.lineTo(...path[i]);
 	}
 	ctx.lineCap = "round";
 	ctx.lineJoin = "round";
 	ctx.stroke();
 };
 
-export const paths = (ctx, pathsArray, color = "black") => {
-	for (const pathItem of pathsArray) {
-		path(ctx, pathItem, color);
+draw.paths = (ctx, paths, color = "black") => {
+	for (const path of paths) {
+		draw.path(ctx, path, color);
 	}
 };
+
+if (typeof module !== "undefined") {
+	module.exports = draw;
+}

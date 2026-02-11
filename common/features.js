@@ -1,10 +1,14 @@
-export const features = {};
+const features = {};
 
-export const getPathCount = (paths) => {
+features.getPathCount = (paths) => {
 	return paths.length;
 };
 
-export const getPointCount = (paths) => {
+features.getPointCount = (paths) => {
 	const points = paths.flat();
 	return points.length;
 };
+
+if (typeof module !== "undefined") {
+	module.exports = features;
+}

@@ -1,50 +1,65 @@
-import { paths as _paths } from "../common/draw.js";
-import { printProgress } from "../common/utils.js";
-import {
-	RAW_DIR,
-	JSON_DIR,
-	IMG_DIR,
-	SAMPLES,
-	SAMPLES_JS,
-} from "../common/constants.js";
-import { readdirSync, readFileSync, writeFileSync } from "fs";
+const draw = require("../common/draw.js");
+const constants = require("../common/constants.js");
+const utils = require("../common/utils.js");
 
-import { createCanvas } from "canvas";
+const { createCanvas } = require("canvas");
 const canvas = createCanvas(400, 400);
 const ctx = canvas.getContext("2d");
 
-const fileNames = readdirSync(RAW_DIR);
+const fs = require("fs");
+
+if (fs.existsSync(constants.DATASET_DIR)) {
+	fs.readdirSync(constants.DATASET_DIR).forEach((fileName) =>
+		fs.rmSync(constants.DATASET_DIR + "/" + fileName, { recursive: true }),
+	);
+	fs.rmdirSync(constants.DATASET_DIR);
+}
+fs.mkdirSync(constants.DATASET_DIR);
+fs.mkdirSync(constants.JSON_DIR);
+fs.mkdirSync(constants.IMG_DIR);
+console.log("GENERATING DATASET ...");
+
+const fileNames = fs.readdirSync(constants.RAW_DIR);
 const samples = [];
 let id = 1;
 fileNames.forEach((fn) => {
-	const content = readFileSync(RAW_DIR + "/" + fn);
+	const content = fs.readFileSync(constants.RAW_DIR + "/" + fn);
 	const { session, student, drawings } = JSON.parse(content);
 	for (let label in drawings) {
 		samples.push({
 			id,
 			label,
-			user_name: student,
-			user_id: session,
+			student_name: student,
+			student_id: session,
 		});
 
 		const paths = drawings[label];
-		writeFileSync(JSON_DIR + "/" + id + ".json", JSON.stringify(paths));
+		fs.writeFileSync(
+			constants.JSON_DIR + "/" + id + ".json",
+			JSON.stringify(paths),
+		);
 
-		generateImageFile(IMG_DIR + "/" + id + ".png", paths);
+		generateImageFile(constants.IMG_DIR + "/" + id + ".png", paths);
 
-		printProgress(id, fileNames.length * 8); // 8 is the number of labels per file
+		utils.printProgress(id, fileNames.length * 8);
 		id++;
 	}
 });
+console.log("\n");
 
-writeFileSync(SAMPLES, JSON.stringify(samples));
+fs.writeFileSync(constants.SAMPLES, JSON.stringify(samples));
 
-writeFileSync(SAMPLES_JS, "const samples=" + JSON.stringify(samples) + ";");
+fs.mkdirSync(constants.JS_OBJECTS, { recursive: true });
+fs.writeFileSync(
+	constants.SAMPLES_JS,
+	"const samples=" + JSON.stringify(samples) + ";",
+);
 
 function generateImageFile(outFile, paths) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	_paths(ctx, paths);
+
+	draw.paths(ctx, paths);
 
 	const buffer = canvas.toBuffer("image/png");
-	writeFileSync(outFile, buffer);
+	fs.writeFileSync(outFile, buffer);
 }

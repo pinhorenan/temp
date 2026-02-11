@@ -1,10 +1,16 @@
-export const DATA_DIR = "../data";
-export const RAW_DIR = DATA_DIR + "/raw";
-export const DATASET_DIR = DATA_DIR + "/dataset";
-export const JSON_DIR = DATASET_DIR + "/json";
-export const IMG_DIR = DATASET_DIR + "/img";
-export const SAMPLES = DATASET_DIR + "/samples.json";
-export const FEATURES = DATASET_DIR + "/features.json";
-export const JS_OBJECTS = "../common/js_objects";
-export const SAMPLES_JS = JS_OBJECTS + "/samples.js";
-export const FEATURES_JS = JS_OBJECTS + "/features.js";
+const constants = {};
+
+constants.DATA_DIR = "../data";
+constants.RAW_DIR = constants.DATA_DIR + "/raw";
+constants.DATASET_DIR = constants.DATA_DIR + "/dataset";
+constants.JSON_DIR = constants.DATASET_DIR + "/json";
+constants.IMG_DIR = constants.DATASET_DIR + "/img";
+constants.SAMPLES = constants.DATASET_DIR + "/samples.json";
+constants.FEATURES = constants.DATASET_DIR + "/features.json";
+constants.JS_OBJECTS = "../common/js_objects";
+constants.SAMPLES_JS = constants.JS_OBJECTS + "/samples.js";
+constants.FEATURES_JS = constants.JS_OBJECTS + "/features.js";
+
+if (typeof module !== "undefined") {
+	module.exports = constants;
+}

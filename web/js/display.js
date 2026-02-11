@@ -1,18 +1,15 @@
-import { IMG_DIR } from "../../common/constants.js";
-import { flaggedUsers } from "../../common/utils.js";
-
-export function createRow(container, userName, samples) {
+function createRow(container, studentName, samples) {
 	const row = document.createElement("div");
 	row.classList.add("row");
 	container.appendChild(row);
 
 	const rowLabel = document.createElement("div");
-	rowLabel.innerHTML = userName;
+	rowLabel.innerHTML = studentName;
 	rowLabel.classList.add("rowLabel");
 	row.appendChild(rowLabel);
 
 	for (let sample of samples) {
-		const { id, label, user_id } = sample;
+		const { id, label, student_id } = sample;
 
 		const sampleContainer = document.createElement("div");
 		sampleContainer.id = "sample_" + id;
@@ -25,10 +22,9 @@ export function createRow(container, userName, samples) {
 
 		const img = document.createElement("img");
 		img.setAttribute("loading", "lazy");
-		img.src = IMG_DIR + "/" + id + ".png";
+		img.src = constants.IMG_DIR + "/" + id + ".png";
 		img.classList.add("thumb");
-
-		if (flaggedUsers.includes(user_id)) {
+		if (utils.flaggedUsers.includes(student_id)) {
 			img.classList.add("blur");
 		}
 		sampleContainer.appendChild(img);
@@ -37,14 +33,17 @@ export function createRow(container, userName, samples) {
 	}
 }
 
-export function handleClick(sample, doScroll = true) {
+function handleClick(sample, doScroll = true) {
 	[...document.querySelectorAll(".emphasize")].forEach((e) =>
 		e.classList.remove("emphasize"),
 	);
 	const el = document.getElementById("sample_" + sample.id);
 	el.classList.add("emphasize");
 	if (doScroll) {
-		el.scrollIntoView({ behavior: "auto", block: "center" });
+		el.scrollIntoView({
+			behavior: "auto",
+			block: "center",
+		});
 	}
 	chart.selectSample(sample);
 }
