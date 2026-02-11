@@ -8,24 +8,40 @@
 </head>
 <body>
   <h1>Data Viewer</h1>
+  <div id="chartContainer"></div>
   <div id="container"></div>
   <script type="module"> 
-    import { groupBy } from "../common/utils.js"; 
-    import { samples } from "../common/js_objects/samples.js"; 
-    import { createRow } from "./js/display.js";
-
+    import { utils, groupBy } from "../common/utils.js"; 
+    import { features } from "../common/js_objects/features.js"; 
+    import { createRow, handleClick } from "./js/display.js";
+    import { graphics } from "./chart/graphics.js";
+    import { math } from "./chart/math.js";
+    import { Chart } from "./chart/chart.js";
+    
+    const {samples, featureNames} = features;
     const groups = groupBy(samples, "user_id"); 
 
     for(let user_id in groups){
-      const samples=groups[user_id];
-      const userName=samples[0].user_name;
-      createRow(container,userName,samples);
-    }
+      const samples = groups[user_id];
+      const userName = samples[0].user_name;
+      createRow(container, userName, samples);
+    };
 
-</script>  
-  <script>
-    
-  </script>
+    const options = {
+      size: 400,
+      axesLabels: featureNames,
+      styles: utils.styles,
+      transparency: 0.7,
+      icon:"image"
+    };
+    graphics.generateImages(utils.styles);
 
+    const chart = new Chart(
+      chartContainer, 
+      samples, 
+      options,
+      handleClick
+    );
+</script>
 </body>
 </html>
