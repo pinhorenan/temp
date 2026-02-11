@@ -6,6 +6,7 @@ class SketchPad {
 		this.canvas.style = `
          background-color:white;
          box-shadow: 0px 0px 10px 2px black;
+         filter: invert(1);
       `;
 		container.appendChild(this.canvas);
 
@@ -14,6 +15,8 @@ class SketchPad {
 
 		this.undoBtn = document.createElement("button");
 		this.undoBtn.innerHTML = "UNDO";
+		this.undoBtn.style.position = "relative";
+		this.undoBtn.style.zIndex = 1;
 		container.appendChild(this.undoBtn);
 
 		this.ctx = this.canvas.getContext("2d");
@@ -31,32 +34,23 @@ class SketchPad {
 	}
 
 	#addEventListeners() {
-		this.canvas.onmousedown = (evt) => {
+		this.canvas.onpointerdown = (evt) => {
 			const mouse = this.#getMouse(evt);
 			this.paths.push([mouse]);
 			this.isDrawing = true;
+			evt.preventDefault();
 		};
-		this.canvas.onmousemove = (evt) => {
+		this.canvas.onpointermove = (evt) => {
 			if (this.isDrawing) {
 				const mouse = this.#getMouse(evt);
 				const lastPath = this.paths[this.paths.length - 1];
 				lastPath.push(mouse);
 				this.#redraw();
 			}
+			evt.preventDefault();
 		};
-		document.onmouseup = () => {
+		document.onpointerup = () => {
 			this.isDrawing = false;
-		};
-		this.canvas.ontouchstart = (evt) => {
-			const loc = evt.touches[0];
-			this.canvas.onmousedown(loc);
-		};
-		this.canvas.ontouchmove = (evt) => {
-			const loc = evt.touches[0];
-			this.canvas.onmousemove(loc);
-		};
-		document.ontouchend = () => {
-			document.onmouseup();
 		};
 		this.undoBtn.onclick = () => {
 			this.paths.pop();
@@ -72,9 +66,7 @@ class SketchPad {
 		} else {
 			this.undoBtn.disabled = true;
 		}
-		if (this.onUpdate) {
-			this.onUpdate(this.paths);
-		}
+		this.triggerUpdate();
 	}
 
 	triggerUpdate() {

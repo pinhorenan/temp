@@ -48,12 +48,24 @@ graphics.generateImages = (styles, size = 20) => {
 		};
 		const hue = -45 + colorHueMap[style.color];
 		if (!isNaN(hue)) {
-			ctx.filter = `
+			/*
+         ctx.filter = `
             brightness(2)
             contrast(0.3)
             sepia(1)
             brightness(0.7)
             hue-rotate(${hue}deg)
+            saturate(3)
+            contrast(3)
+         `;
+         */
+			ctx.filter = `
+            brightness(2)
+            contrast(0.6)
+            sepia(1)
+            brightness(0.7)
+            hue-rotate(${hue}deg)
+            brightness(0.9)
             saturate(3)
             contrast(3)
          `;
