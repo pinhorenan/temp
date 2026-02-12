@@ -3,7 +3,7 @@ if (typeof utils === "undefined") {
 }
 
 class KNN {
-	constructor(samples, k) {
+	constructor(samples, k = 50) {
 		this.samples = samples;
 		this.k = k;
 	}
@@ -17,7 +17,7 @@ class KNN {
 			counts[label] = counts[label] ? counts[label] + 1 : 1;
 		}
 		const max = Math.max(...Object.values(counts));
-		const label = labels.find((l) => counts[l] === max);
+		const label = labels.find((l) => counts[l] == max);
 		return { label, nearestSamples };
 	}
 }

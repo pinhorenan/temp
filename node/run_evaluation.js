@@ -11,7 +11,7 @@ const { samples: trainingSamples } = JSON.parse(
 	fs.readFileSync(constants.TRAINING),
 );
 
-const kNN = new KNN(trainingSamples, 50);
+const kNN = new KNN(trainingSamples);
 
 const { samples: testingSamples } = JSON.parse(
 	fs.readFileSync(constants.TESTING),
@@ -38,7 +38,8 @@ console.log(
 console.log("GENERATING DECISION BOUNDARY ...");
 
 const { createCanvas } = require("canvas");
-const canvas = createCanvas(400, 400);
+const imgSize = 100;
+const canvas = createCanvas(imgSize, imgSize);
 const ctx = canvas.getContext("2d");
 
 for (let x = 0; x < canvas.width; x++) {
@@ -49,9 +50,8 @@ for (let x = 0; x < canvas.width; x++) {
 		ctx.fillStyle = color;
 		ctx.fillRect(x, y, 1, 1);
 	}
+	utils.printProgress(x + 1, canvas.width);
 }
 
 const buffer = canvas.toBuffer("image/png");
 fs.writeFileSync(constants.DECISION_BOUNDARY, buffer);
-
-console.log("DONE!");

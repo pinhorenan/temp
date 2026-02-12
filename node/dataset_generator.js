@@ -17,6 +17,9 @@ if (fs.existsSync(constants.DATASET_DIR)) {
 fs.mkdirSync(constants.DATASET_DIR);
 fs.mkdirSync(constants.JSON_DIR);
 fs.mkdirSync(constants.IMG_DIR);
+if (!fs.existsSync(constants.MODELS_DIR)) {
+	fs.mkdirSync(constants.MODELS_DIR);
+}
 console.log("GENERATING DATASET ...");
 
 const fileNames = fs.readdirSync(constants.RAW_DIR);
@@ -26,21 +29,22 @@ fileNames.forEach((fn) => {
 	const content = fs.readFileSync(constants.RAW_DIR + "/" + fn);
 	const { session, student, drawings } = JSON.parse(content);
 	for (let label in drawings) {
-		samples.push({
-			id,
-			label,
-			student_name: student,
-			student_id: session,
-		});
+		if (!utils.flaggedSamples.includes(id)) {
+			samples.push({
+				id,
+				label,
+				student_name: student,
+				student_id: session,
+			});
 
-		const paths = drawings[label];
-		fs.writeFileSync(
-			constants.JSON_DIR + "/" + id + ".json",
-			JSON.stringify(paths),
-		);
+			const paths = drawings[label];
+			fs.writeFileSync(
+				constants.JSON_DIR + "/" + id + ".json",
+				JSON.stringify(paths),
+			);
 
-		generateImageFile(constants.IMG_DIR + "/" + id + ".png", paths);
-
+			generateImageFile(constants.IMG_DIR + "/" + id + ".png", paths);
+		}
 		utils.printProgress(id, fileNames.length * 8);
 		id++;
 	}
@@ -52,7 +56,7 @@ fs.writeFileSync(constants.SAMPLES, JSON.stringify(samples));
 fs.mkdirSync(constants.JS_OBJECTS, { recursive: true });
 fs.writeFileSync(
 	constants.SAMPLES_JS,
-	"const samples=" + JSON.stringify(samples) + ";",
+	"const samples = " + JSON.stringify(samples) + ";",
 );
 
 function generateImageFile(outFile, paths) {
