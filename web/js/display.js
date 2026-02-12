@@ -78,11 +78,13 @@ function toggleInput() {
 }
 
 function toggleOuput() {
-	if (confusionContainer.style.display == "none") {
-		confusionContainer.style.display = "block";
-		sketchPad.triggerUpdate();
-	} else {
+	if (networkCanvas.style.display == "") {
+		networkCanvas.style.display = "none";
+		confusionContainer.style.display = ";";
+	} else if (confusionContainer.style.display == "") {
 		confusionContainer.style.display = "none";
-		chart.hideDynamicPoint();
+	} else {
+		confusionContainer.style.display = "";
+		networkCanvas.style.display = "";
 	}
 }

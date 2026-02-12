@@ -1,5 +1,3 @@
-const NeuralNetwork = require("../network.js");
-
 if (typeof utils === "undefined") {
 	utils = require("../utils.js");
 }
@@ -13,6 +11,12 @@ class MLP {
 		this.classes = classes;
 		this.network = new NeuralNetwork(neuronCounts);
 	}
+	load(mlp) {
+		this.neuronCounts = mlp.neuronCounts;
+		this.classes = mlp.classes;
+		this.network = mlp.network;
+	}
+
 	predict(point) {
 		const output = NeuralNetwork.feedForward(point, this.network);
 		const max = Math.max(...output);
