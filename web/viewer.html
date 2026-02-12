@@ -2,7 +2,10 @@
 <html lang="en">
    <head>
       <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta
+         name="viewport"
+         content="width=device-width, initial-scale=1"
+      />
       <title>Data Viewer</title>
       <link rel="stylesheet" href="styles.css" />
    </head>
@@ -24,8 +27,8 @@
          <canvas id="networkCanvas"></canvas>
       </div>
       <div id="controlPanel">
-         <button type="button" onClick="toggleInput()">Toggle Input</button>
-         <button type="button" onClick="toggleOuput()">Toggle Output</button>
+         <button onClick="toggleInput()">Toggle Input</button>
+         <button onClick="toggleOutput()">Toggle Output</button>
          <div id="statistics"></div>
       </div>
       <div id="container"></div>
@@ -72,7 +75,7 @@
          for (const testSample of testingSamples) {
             testSample.truth = testSample.label;
             testSample.label = "?";
-            //const { label, nearestSamples } = kNN.predict(testSample.point);
+            // const { label, nearestSamples } = kNN.predict(testSample.point);
             const { label, nearestSamples } = mlp.predict(testSample.point);
             testSample.label = label;
             testSample.nearestSamples = nearestSamples;
@@ -83,7 +86,7 @@
          statistics.innerHTML =
             "<b>ACCURACY</b><br>" +
             correctCount +
-            "/" + 
+            "/" +
             totalCount +
             " (" +
             utils.formatPercent(correctCount / totalCount) +
@@ -123,14 +126,22 @@
 
          const chart = new Chart(
             chartContainer,
-            testingSamples,
+            testingSamples.filter(
+               (s) => (s.truth == "pencil" && s.label != "pencil")
+            ),
             options,
             handleClick
          );
 
-         const confusion = new Confusion(confusionContainer, testingSamples, utils.classes, options);
+         const confusion = new Confusion(
+            confusionContainer,
+            testingSamples,
+            utils.classes,
+            options
+         );
 
-         const outputLabels = Object.values(utils.styles).map((s) => s.image);
+         const outputLabels = Object.values(utils.styles)
+            .map((s) => s.image);
          Visualizer.drawNetwork(networkCtx, mlp.network, outputLabels);
 
          // Initializing the Sketch Pad
@@ -140,9 +151,6 @@
          toggleInput();
 
          function onDrawingUpdate(paths) {
-            if (paths.length == 0 || paths[0].length < 3) {
-               return;
-            }
             const functions = featureFunctions.inUse.map((f) => f.function);
             point = functions.map((f) => f(paths));
             utils.normalizePoints([point], minMax);

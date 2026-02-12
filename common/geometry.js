@@ -1,5 +1,6 @@
-// autor original: id-ilych
+// Adapted From Original Author:
 // https://gist.github.com/id-ilych/8630fb273e5c5a0b64ca1dc080d68b63
+
 if (typeof utils === "undefined") {
 	utils = require("./utils.js");
 }
@@ -22,8 +23,8 @@ geometry.roundness = (polygon) => {
 geometry.length = (polygon) => {
 	let length = 0;
 	for (let i = 0; i < polygon.length; i++) {
-		const nextIndex = (i + 1) % polygon.length;
-		length += utils.distance(polygon[i], polygon[nextIndex]);
+		const nextI = (i + 1) % polygon.length;
+		length += utils.distance(polygon[i], polygon[nextI]);
 	}
 	return length;
 };
@@ -36,7 +37,6 @@ geometry.area = (polygon) => {
 		const C = polygon[i + 1];
 		area += geometry.triangleArea(A, B, C);
 	}
-
 	return area;
 };
 

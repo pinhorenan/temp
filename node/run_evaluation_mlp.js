@@ -12,13 +12,14 @@ const { samples: trainingSamples } = JSON.parse(
 );
 
 const mlp = new MLP(
-	[trainingSamples[0].point.length, utils.classes.length],
+	[trainingSamples[0].point.length, 10, utils.classes.length],
 	utils.classes,
 );
 
 if (fs.existsSync(constants.MODEL)) {
 	mlp.load(JSON.parse(fs.readFileSync(constants.MODEL)));
 }
+
 mlp.fit(trainingSamples, 5000);
 
 fs.writeFileSync(constants.MODEL, JSON.stringify(mlp));
@@ -49,7 +50,7 @@ console.log(
 console.log("GENERATING DECISION BOUNDARY ...");
 
 const { createCanvas } = require("canvas");
-const imgSize = 100;
+const imgSize = 1000;
 const canvas = createCanvas(imgSize, imgSize);
 const ctx = canvas.getContext("2d");
 

@@ -10,6 +10,7 @@ const ctx = canvas.getContext("2d");
 
 const fs = require("fs");
 
+// This section helps to install the package
 if (fs.existsSync(constants.DATASET_DIR)) {
 	fs.readdirSync(constants.DATASET_DIR).forEach((fileName) =>
 		fs.rmSync(constants.DATASET_DIR + "/" + fileName, { recursive: true }),
@@ -23,6 +24,7 @@ if (!fs.existsSync(constants.MODELS_DIR)) {
 	fs.mkdirSync(constants.MODELS_DIR);
 }
 console.log("GENERATING DATASET ...");
+// End of extra section
 
 const fileNames = fs.readdirSync(constants.RAW_DIR);
 const samples = [];
@@ -67,8 +69,17 @@ function generateImageFile(outFile, paths) {
 	draw.paths(ctx, paths);
 
 	const pixels = featureFunctions.getPixels(paths);
-	const complexity = pixels.filter((a) => a != 0).length;
-	draw.text(ctx, complexity, "blue");
+	const size = Math.sqrt(pixels.length);
+	const imgData = ctx.getImageData(0, 0, size, size);
+	for (let i = 0; i < pixels.length; i++) {
+		const alpha = pixels[i];
+		const startIndex = i * 4;
+		imgData.data[startIndex] = 0;
+		imgData.data[startIndex + 1] = 0;
+		imgData.data[startIndex + 2] = 0;
+		imgData.data[startIndex + 3] = alpha;
+	}
+	ctx.putImageData(imgData, 0, 0);
 
 	const buffer = canvas.toBuffer("image/png");
 	fs.writeFileSync(outFile, buffer);

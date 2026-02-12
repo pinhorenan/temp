@@ -16,7 +16,6 @@ class MLP {
 		this.classes = mlp.classes;
 		this.network = mlp.network;
 	}
-
 	predict(point) {
 		const output = NeuralNetwork.feedForward(point, this.network);
 		const max = Math.max(...output);
@@ -24,7 +23,6 @@ class MLP {
 		const label = this.classes[index];
 		return { label };
 	}
-
 	fit(samples, tries = 1000) {
 		let bestNetwork = this.network;
 		let bestAccuracy = this.evaluate(samples);
@@ -32,8 +30,8 @@ class MLP {
 			this.network = new NeuralNetwork(this.neuronCounts);
 			const accuracy = this.evaluate(samples);
 			if (accuracy > bestAccuracy) {
-				bestNetwork = this.network;
 				bestAccuracy = accuracy;
+				bestNetwork = this.network;
 			}
 		}
 		this.network = bestNetwork;

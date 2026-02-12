@@ -131,6 +131,7 @@ class Confusion {
 						cell.style.backgroundColor = `rgba(255, 0, 0, ${p})`;
 					}
 				}
+
 				row.appendChild(cell);
 			}
 		}

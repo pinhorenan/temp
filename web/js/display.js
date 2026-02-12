@@ -77,10 +77,10 @@ function toggleInput() {
 	}
 }
 
-function toggleOuput() {
+function toggleOutput() {
 	if (networkCanvas.style.display == "") {
 		networkCanvas.style.display = "none";
-		confusionContainer.style.display = ";";
+		confusionContainer.style.display = "";
 	} else if (confusionContainer.style.display == "") {
 		confusionContainer.style.display = "none";
 	} else {

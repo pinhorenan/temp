@@ -7,7 +7,6 @@ function toggleFlaggedSample(sample) {
 	} else {
 		flaggedSamples.push(sample.id);
 	}
-
 	[...document.querySelectorAll(".flagged")].forEach((e) =>
 		e.classList.remove("flagged"),
 	);
