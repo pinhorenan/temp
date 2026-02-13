@@ -1,0 +1,1 @@
+O projeto foi desenvolvido para visualizar conceitos básicos do machine learning e construir as ferramentas mínimas na prática. O código foi construindo seguindo os tutoriais de machine learning de Radu Mariescu-Istodor.
